@@ -2,7 +2,7 @@ streamlit
 crewai==0.41.1
 langchain
 langchain-community
-pydantic==1.10.8
+pydantic
 PyPDF2==3.0.1
 openai
 PyYAML==6.0.1
