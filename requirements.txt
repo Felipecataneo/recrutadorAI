@@ -8,3 +8,4 @@ langchain
 PyPDF2
 langchain-community
 faiss-cpu
+chromadb==0.4.13
