@@ -1,8 +1,9 @@
-streamlit
+streamlit==1.37.0
 crewai==0.41.1
-langchain
-langchain-community
-pydantic
+langchain==0.2.11
+langchain-community==0.2.10
+pydantic==2.8.2
 PyPDF2==3.0.1
-openai
+openai==1.37.1
 PyYAML==6.0.1
+faiss-cpu==1.8.0.post1

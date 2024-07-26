@@ -1,0 +1,15 @@
+# Ignore virtual environment
+recruta/
+venv/
+env/
+
+# Ignore .env files
+.env
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore IDE specific files
+.vscode/
+.idea/
