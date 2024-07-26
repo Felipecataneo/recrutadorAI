@@ -18,7 +18,8 @@ os.environ["OPENAI_API_KEY"] = api_key
 model_options = [
     "gpt-3.5-turbo",
     "gpt-4o",
-    "gpt-4"
+    "gpt-4-turbo",
+    "gpt-4o-mini"
 ]
 selected_model = st.sidebar.selectbox("Selecione o modelo OpenAI", model_options)
 os.environ["OPENAI_MODEL_NAME"] = selected_model
