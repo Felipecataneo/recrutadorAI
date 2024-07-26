@@ -3,6 +3,8 @@ from crewai.project import CrewBase, agent, crew, task
 
 @CrewBase
 class RecruitmentCrew():
+    def __init__(self):
+        print("crew iniciado")
     """Recruitment crew"""
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
