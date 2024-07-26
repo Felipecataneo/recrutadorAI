@@ -1,0 +1,10 @@
+streamlit
+crewai
+crewai[tools]
+openai
+PyYAML
+python-dotenv
+langchain
+PyPDF2
+langchain-community
+faiss-cpu

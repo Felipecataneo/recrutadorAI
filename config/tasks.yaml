@@ -1,0 +1,44 @@
+research_candidates_task:
+  description: >
+    Analisar os currículos dos candidatos e os relatórios iniciais da entrevista(HR Interview Reports) com RH para extrair informações relevantes, como experiência, habilidades, educação e impressões do RH.
+    Garantir que os candidatos atendam aos requisitos do trabalho(Job Requirements) fornecidos.
+    Caso no Job Requirements tenha salário da vaga e tenha a pretensão salarial no HR Interview Reports, levar isso em consideração também no processo.
+    Caso no Job Requirements tenho local de trabalho da vaga e no HR Interview Reports o candidato informe a disponibilidade de mudança ou não, levar isso em consideração também no processo.
+    O HR Interview Reports é uma informação opcional e caso não tenha, seguir com a analise dos currículos em comparação com a vaga.
+    Job Requirements:
+    {job_requirements}
+
+    HR Interview Reports:
+    {rh_interview}
+  expected_output: >
+    Candidatos potenciais, perfis resumidos destacando sua adequação e pontos chave da entrevista com o RH.
+
+match_and_score_candidates_task:
+  description: >
+    Avaliar e combinar os candidatos com as melhores posições de trabalho com base em suas qualificações, adequação e feedback da entrevista com o RH.
+    Pontuar cada candidato para refletir seu alinhamento com os requisitos do trabalho e impressões do RH, garantindo um processo de avaliação justo e transparente.
+    Caso no Job Requirements tenha salário da vaga e tenha a pretensão salarial no HR Interview Reports, levar isso em consideração também no processo.
+    Caso no Job Requirements tenho local de trabalho da vaga e no HR Interview Reports o candidato informe a disponibilidade de mudança ou não, levar isso em consideração também no processo.
+    O HR Interview Reports é uma informação opcional e caso não tenha, seguir com a analise dos currículos em comparação com a vaga.
+    
+    Job Requirements:
+    {job_requirements}
+
+    HR Interview Reports:
+    {rh_interview}
+  expected_output: >
+    Uma lista classificada de candidatos com pontuações detalhadas e justificativas para cada posição de trabalho, incluindo insights das entrevistas com o RH.
+
+
+report_candidates_task:
+  description: >
+    Compilar um relatório abrangente para os recrutadores de todos os candidatos a serem apresentados.
+    Resumir os achados das tarefas anteriores, incluindo análise de currículos, insights das entrevistas com RH, e fornecer recomendações claras baseadas nos requisitos do trabalho.
+
+    Job Requirements:
+    {job_requirements}
+
+    HR Interview Reports:
+    {rh_interview}
+  expected_output: >
+    Um relatório detalhado com os melhores candidatos a serem buscados, incluindo perfis, pontuações, destaques das entrevistas com o RH.
