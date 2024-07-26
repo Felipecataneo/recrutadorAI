@@ -1,4 +1,4 @@
-streamlit==1.27.0
+streamlit
 crewai==0.10.5
 langchain==0.0.325
 langchain-community==0.0.6
