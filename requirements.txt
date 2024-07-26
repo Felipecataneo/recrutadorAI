@@ -7,4 +7,3 @@ python-dotenv
 langchain
 PyPDF2
 langchain-community
-faiss-cpu
