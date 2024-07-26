@@ -1,79 +1,93 @@
-from crewai import Agent, Crew, Process, Task
-from crewai.project import CrewBase, agent, crew, task
+import streamlit as st
+import os
+from crew import RecruitmentCrew
+import tempfile
+from custom_pdf_tool import CustomPDFSearchTool
 
-@CrewBase
-class RecruitmentCrew:
-    def __init__(self, pdf_tool=None):
-        self.pdf_tool = pdf_tool
-        print("crew iniciado")
-        self.agents_config = 'config/agents.yaml'
-        self.tasks_config = 'config/tasks.yaml'
+# Configuração da página Streamlit
+st.set_page_config(page_title="Recrutamento AI", layout="wide")
 
-    @agent
-    def researcher(self) -> Agent:
-        return Agent(
-            config=self.agents_config['researcher'],
-            tools=[self.pdf_tool] if self.pdf_tool else [],
-            allow_delegation=False,
-            verbose=True,
-        )
+# Sidebar
+st.sidebar.title("Configurações")
 
-    @agent
-    def matcher(self) -> Agent:
-        return Agent(
-            config=self.agents_config['matcher'],
-            tools=[self.pdf_tool] if self.pdf_tool else [],
-            allow_delegation=False,
-            verbose=True,
-        )
+# Input para OPENAI_API_KEY
+api_key = st.sidebar.text_input("OpenAI API Key", type="password")
+os.environ["OPENAI_API_KEY"] = api_key
 
-    @agent
-    def communicator(self) -> Agent:
-        return Agent(
-            config=self.agents_config['communicator'],
-            tools=[self.pdf_tool] if self.pdf_tool else [],
-            allow_delegation=False,
-            verbose=True,
-        )
+# Picklist para OPENAI_MODEL_NAME
+model_options = [
+    "gpt-3.5-turbo",
+    "gpt-4o",
+    "gpt-4"
+]
+selected_model = st.sidebar.selectbox("Selecione o modelo OpenAI", model_options)
+os.environ["OPENAI_MODEL_NAME"] = selected_model
 
-    @agent
-    def reporter(self) -> Agent:
-        return Agent(
-            config=self.agents_config['reporter'],
-            allow_delegation=False,
-            verbose=True,
-        )
+# Upload de arquivo para job_requirements
+job_req_file = st.sidebar.file_uploader("Upload Job Requirements (TXT)", type="txt")
 
-    @task
-    def research_candidates_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['research_candidates_task'],
-            agent=self.researcher(),
-        )
+# Upload de arquivo para rh_interview (opcional)
+rh_interview_file = st.sidebar.file_uploader("Upload RH Interview (TXT, opcional)", type="txt")
 
-    @task
-    def match_and_score_candidates_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['match_and_score_candidates_task'],
-            agent=self.matcher()
-        )
+# Área principal
+st.title("Sistema de Recrutamento AI")
 
-    @task
-    def report_candidates_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['report_candidates_task'],
-            agent=self.reporter(),
-            context=[self.research_candidates_task(), self.match_and_score_candidates_task()],
-        )
+# Upload de currículos
+uploaded_cvs = st.file_uploader("Upload Currículos (PDF)", type="pdf", accept_multiple_files=True)
 
-    @crew
-    def crew(self) -> Crew:
-        """Criar o time de recrutadores"""
-        agents = [self.researcher(), self.matcher(), self.communicator(), self.reporter()]
-        tasks = [self.research_candidates_task(), self.match_and_score_candidates_task(), self.report_candidates_task()]
-        return Crew(
-            agents=agents,
-            tasks=tasks,
-            process=Process.sequential,
-            verbose=2,
-        )
+# Limite de PDFs
+MAX_PDF_COUNT = 50
+
+# Botão para gerar
+if st.button("Gerar Análise"):
+    if not api_key:
+        st.error("Por favor, insira sua OpenAI API Key.")
+    elif not job_req_file:
+        st.error("Por favor, faça o upload do arquivo de requisitos do trabalho.")
+    elif not uploaded_cvs:
+        st.error("Por favor, faça o upload de pelo menos um currículo.")
+    elif len(uploaded_cvs) > MAX_PDF_COUNT:
+        st.warning(f"Por favor, faça upload de no máximo {MAX_PDF_COUNT} PDFs.")
+        uploaded_cvs = uploaded_cvs[:MAX_PDF_COUNT]
+    else:
+        with st.spinner("Analisando currículos... Isso pode levar alguns minutos."):
+            # Criar diretório temporário para os PDFs
+            with tempfile.TemporaryDirectory() as temp_dir:
+                # Salvar os PDFs no diretório temporário
+                for uploaded_file in uploaded_cvs:
+                    file_path = os.path.join(temp_dir, uploaded_file.name)
+                    with open(file_path, "wb") as f:
+                        f.write(uploaded_file.getbuffer())
+                
+                # Criar CustomPDFSearchTool com o diretório de PDFs
+                pdf_tool = CustomPDFSearchTool(pdf_directory=temp_dir)
+                
+                # Ler conteúdo dos arquivos de texto
+                job_requirements = job_req_file.getvalue().decode("utf-8")
+                rh_interview = rh_interview_file.getvalue().decode("utf-8") if rh_interview_file else ""
+                
+                # Preparar inputs
+                inputs = {
+                    'job_requirements': job_requirements,
+                    'rh_interview': rh_interview
+                }
+                
+                # Executar a análise
+                crew = RecruitmentCrew(pdf_tool=pdf_tool)
+                result = crew.crew().kickoff(inputs=inputs)
+                
+                # Exibir resultados
+                st.success("Análise concluída!")
+                st.write(result)
+
+# Instruções de uso
+st.markdown("""
+## Como usar:
+1. Insira sua OpenAI API Key na barra lateral.
+2. Selecione o modelo OpenAI desejado.
+3. Faça o upload do arquivo de requisitos do trabalho (obrigatório).
+4. Opcionalmente, faça o upload do arquivo de entrevista de RH.
+5. Faça o upload dos currículos em PDF que deseja analisar (máximo de 50).
+6. Clique em "Gerar Análise" para iniciar o processo.
+7. Como gerar sua API key na Openai (https://www.ionos.com/pt-br/digitalguide/sites-de-internet/desenvolvimento-web/chatgpt-api/)
+""")
