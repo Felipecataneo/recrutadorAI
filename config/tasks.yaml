@@ -4,6 +4,7 @@ research_candidates_task:
     Garantir que os candidatos atendam aos requisitos do trabalho(Job Requirements) fornecidos.
     Caso no Job Requirements tenha salário da vaga e tenha a pretensão salarial no HR Interview Reports, levar isso em consideração também no processo.
     Caso no Job Requirements tenho local de trabalho da vaga e no HR Interview Reports o candidato informe a disponibilidade de mudança ou não, levar isso em consideração também no processo.
+    Quando temos o HR Interview Reports ele deve ser levado em consideração mas a análise dos currículos é de extrema relevância, não pode somente levar em consideração a análise do RH.
     O HR Interview Reports é uma informação opcional e caso não tenha, seguir com a analise dos currículos em comparação com a vaga.
     Job Requirements:
     {job_requirements}
@@ -19,6 +20,7 @@ match_and_score_candidates_task:
     Pontuar cada candidato para refletir seu alinhamento com os requisitos do trabalho e impressões do RH, garantindo um processo de avaliação justo e transparente.
     Caso no Job Requirements tenha salário da vaga e tenha a pretensão salarial no HR Interview Reports, levar isso em consideração também no processo.
     Caso no Job Requirements tenho local de trabalho da vaga e no HR Interview Reports o candidato informe a disponibilidade de mudança ou não, levar isso em consideração também no processo.
+    Quando temos o HR Interview Reports ele deve ser levado em consideração mas a análise dos currículos é de extrema relevância, não pode somente levar em consideração a análise do RH.
     O HR Interview Reports é uma informação opcional e caso não tenha, seguir com a analise dos currículos em comparação com a vaga.
     
     Job Requirements:
